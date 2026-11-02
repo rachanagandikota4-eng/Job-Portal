@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Job | Rachana Job Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Job<span>Portal</span></div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="add-job.html">Add Job</a></li>
+        <li><a href="update-job.html">Update</a></li>
+        <li><a href="delete-job.html">Delete</a></li>
+        
+    </ul>
+</nav>
+
+<header class="page-header">
+    <h1>Add a <span>New Job</span></h1>
+    <p>Add career opportunities to the job portal.</p>
+</header>
+
+<section class="section">
+
+    <div class="form-container">
+        <h2>Job <span>Information</span></h2>
+
+        <form id="addJobForm">
+
+            <div class="form-group">
+                <label for="job_id">Job ID</label>
+                <input type="number" id="job_id" required>
+            </div>
+
+            <div class="form-group">
+                <label for="title">Job Title</label>
+                <input type="text" id="title" placeholder="Java Developer" required>
+            </div>
+
+            <div class="form-group">
+                <label for="company">Company</label>
+                <input type="text" id="company" placeholder="IBM" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" placeholder="Hyderabad" required>
+            </div>
+
+            <div class="form-group">
+                <label for="salary">Annual Salary (₹)</label>
+                <input type="number" id="salary" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skill">Required Skill</label>
+                <select id="skill" required>
+                    <option value="">Select Skill</option>
+                    <option value="Java">Java</option>
+                    <option value="Python">Python</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interview_date">Interview Date</label>
+                <input type="date" id="interview_date" required>
+            </div>
+
+            <button type="submit">Add Job</button>
+
+        </form>
+
+        <p id="message" role="status" style="margin-top:20px;text-align:center;"></p>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-card">
+            <img src="1.jpg" alt="Team">
+            <div class="image-card-content"><h3>Find Talent</h3></div>
+        </div>
+
+        <div class="image-card">
+            <img src="6.jpg" alt="Office">
+            <div class="image-card-content"><h3>Professional Offices</h3></div>
+        </div>
+
+        <div class="image-card">
+            <img src="7.jpg" alt="Meeting">
+            <div class="image-card-content"><h3>Team Collaboration</h3></div>
+        </div>
+
+        <div class="image-card">
+            <img src="8.jpg" alt="Workspace">
+            <div class="image-card-content"><h3>New Opportunities</h3></div>
+        </div>
+    </div>
+
+</section>
+
+<footer>
+    <p>Designed & Developed by <span class="rachana">Rachana</span></p>
+    <p>Online Job Portal © 2026</p>
+</footer>
+
+<script>
+document.getElementById('addJobForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const job = {
+        job_id: Number(document.getElementById('job_id').value),
+        title: document.getElementById('title').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        location: document.getElementById('location').value.trim(),
+        salary: Number(document.getElementById('salary').value),
+        skill: document.getElementById('skill').value,
+        interview_date: document.getElementById('interview_date').value
+    };
+
+    const message = document.getElementById('message');
+
+    try {
+        const response = await fetch('/api/jobs', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(job)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || result.error || 'Unable to add job.');
+        }
+
+        message.textContent = 'Job added successfully!';
+        message.style.color = '#287a43';
+        this.reset();
+
+    } catch (error) {
+        message.textContent = error.message || 'Server connection failed.';
+        message.style.color = '#b42318';
+    }
+});
+</script>
+
+</body>
+</html>

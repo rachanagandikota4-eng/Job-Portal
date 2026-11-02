@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Job | Rachana Job Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Job<span>Portal</span></div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="add-job.html">Add Job</a></li>
+        <li><a href="update-job.html">Update</a></li>
+        <li><a href="delete-job.html">Delete</a></li>
+        
+    </ul>
+</nav>
+
+<header class="page-header">
+    <h1>Remove a <span>Job Listing</span></h1>
+    <p>Manage existing job listings in your portal.</p>
+</header>
+
+<section class="section">
+
+    <div class="form-container">
+        <h2>Delete <span>Job</span></h2>
+
+        <form id="deleteJobForm">
+
+            <div class="form-group">
+                <label for="job_id">Job ID to Delete</label>
+                <input type="number" id="job_id"
+                       placeholder="Enter Job ID" required>
+            </div>
+
+            <p style="color:#806d5c;margin-bottom:20px;">
+                Please verify the Job ID before deleting the listing.
+            </p>
+
+            <button type="submit">Delete Job</button>
+        </form>
+
+        <p id="message" role="status" style="margin-top:20px;text-align:center;"></p>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-card">
+            <img src="6.jpg" alt="Office">
+            <div class="image-card-content"><h3>Job Management</h3></div>
+        </div>
+        <div class="image-card">
+            <img src="1.jpg" alt="Team">
+            <div class="image-card-content"><h3>Professional Teams</h3></div>
+        </div>
+        <div class="image-card">
+            <img src="7.jpg" alt="Meeting">
+            <div class="image-card-content"><h3>Manage Listings</h3></div>
+        </div>
+        <div class="image-card">
+            <img src="8.jpg" alt="Workspace">
+            <div class="image-card-content"><h3>Organized Workspace</h3></div>
+        </div>
+    </div>
+
+</section>
+
+<footer>
+    <p>Designed & Developed by <span class="rachana">Rachana</span></p>
+    <p>Online Job Portal © 2026</p>
+</footer>
+
+<script>
+document.getElementById('deleteJobForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById('job_id').value;
+    const message = document.getElementById('message');
+
+    if (!confirm('Are you sure you want to delete Job ID ' + id + '?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/jobs/' + encodeURIComponent(id), {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || result.error || 'Unable to delete job.');
+        }
+
+        message.textContent = 'Job deleted successfully!';
+        message.style.color = '#287a43';
+        this.reset();
+
+    } catch (error) {
+        message.textContent = error.message || 'Server connection failed.';
+        message.style.color = '#b42318';
+    }
+});
+</script>
+
+</body>
+</html>

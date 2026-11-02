@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Jobs |  Rachana Job Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Job<span>Portal</span></div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+         <li><a href="about.html">About</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="add-job.html">Add Job</a></li>
+        <li><a href="update-job.html">Update</a></li>
+        <li><a href="delete-job.html">Delete</a></li>
+        
+    </ul>
+</nav>
+
+<header class="page-header">
+    <h1>Explore <span>Career Opportunities</span></h1>
+    <p>Discover your next opportunity with leading companies.</p>
+</header>
+
+<section class="section">
+
+    <div class="search-container">
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search Job..."
+        list="jobOptions"
+        onclick="showJobOptions()"
+        oninput="searchJobs()"
+    >
+
+    <datalist id="jobOptions">
+        <option value="Java Developer">
+        <option value="Python Developer">
+        <option value="Software Engineer">
+        <option value="Web Developer">
+        <option value="Backend Developer">
+        <option value="Frontend Developer">
+    </datalist>
+
+    <button onclick="searchJobs()">Search</button>
+</div>
+
+    <div class="jobs-container" id="jobsContainer">
+
+        <div class="job-card">
+            <h3>Java Developer</h3>
+            <p><strong>Company:</strong> IBM</p>
+            <p><strong>Location:</strong> Hyderabad</p>
+            <p><strong>Salary:</strong> ₹6,50,000</p>
+            <p><strong>Skill:</strong> Java</p>
+            <p><strong>Interview:</strong> 10 Nov 2026</p>
+        </div>
+
+        <div class="job-card">
+            <h3>Python Developer</h3>
+            <p><strong>Company:</strong> Infosys</p>
+            <p><strong>Location:</strong> Bangalore</p>
+            <p><strong>Salary:</strong> ₹5,50,000</p>
+            <p><strong>Skill:</strong> Python</p>
+            <p><strong>Interview:</strong> 15 Nov 2026</p>
+        </div>
+
+        <div class="job-card">
+            <h3>Software Engineer</h3>
+            <p><strong>Company:</strong> TCS</p>
+            <p><strong>Location:</strong> Chennai</p>
+            <p><strong>Salary:</strong> ₹6,00,000</p>
+            <p><strong>Skill:</strong> Java</p>
+            <p><strong>Interview:</strong> 20 Nov 2026</p>
+        </div>
+
+        <div class="job-card">
+            <h3>Backend Developer</h3>
+            <p><strong>Company:</strong> Wipro</p>
+            <p><strong>Location:</strong> Hyderabad</p>
+            <p><strong>Salary:</strong> ₹5,80,000</p>
+            <p><strong>Skill:</strong> Java</p>
+            <p><strong>Interview:</strong> 25 Nov 2026</p>
+        </div>
+
+        <div class="job-card">
+            <h3>Python Developer</h3>
+            <p><strong>Company:</strong> Deloitte</p>
+            <p><strong>Location:</strong> Pune</p>
+            <p><strong>Salary:</strong> ₹6,20,000</p>
+            <p><strong>Skill:</strong> Python</p>
+            <p><strong>Interview:</strong> 1 Dec 2026</p>
+        </div>
+
+    </div>
+
+</section>
+
+<section class="section">
+    <div class="section-title">
+        <h2>Build Your <span>Future</span></h2>
+        <p>Opportunities are waiting for you.</p>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-card">
+            <img src="1.jpg" alt="Team working">
+            <div class="image-card-content">
+                <h3>Teamwork</h3>
+                <p>Grow with professional teams.</p>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="6.jpg" alt="Office">
+            <div class="image-card-content">
+                <h3>Modern Offices</h3>
+                <p>Discover exciting workplaces.</p>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="7.jpg" alt="Business meeting">
+            <div class="image-card-content">
+                <h3>Career Growth</h3>
+                <p>Take the next step in your career.</p>
+            </div>
+        </div>
+
+        <div class="image-card">
+            <img src="8.jpg" alt="Workspace">
+            <div class="image-card-content">
+                <h3>New Beginnings</h3>
+                <p>Find the right opportunity for you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>Designed & Developed by <span class="rachana">Rachana</span></p>
+    <p>Online Job Portal © 2026</p>
+</footer>
+
+<script>
+async function loadJobs() {
+    try {
+        const response = await fetch('/api/jobs');
+
+        if (!response.ok) return;
+
+        const jobs = await response.json();
+
+        if (!Array.isArray(jobs)) return;
+
+        const container = document.getElementById('jobsContainer');
+
+        container.innerHTML = jobs.map(job => `
+            <div class="job-card">
+                <h3>${escapeHTML(job.title)}</h3>
+                <p><strong>Job ID:</strong> ${escapeHTML(job.job_id)}</p>
+                <p><strong>Company:</strong> ${escapeHTML(job.company)}</p>
+                <p><strong>Location:</strong> ${escapeHTML(job.location)}</p>
+                <p><strong>Salary:</strong> ₹${Number(job.salary).toLocaleString('en-IN')}</p>
+                <p><strong>Skill:</strong> ${escapeHTML(job.skill)}</p>
+                <p><strong>Interview:</strong> ${escapeHTML(job.interview_date)}</p>
+            </div>
+        `).join('');
+    } catch (error) {
+        console.log('Using sample jobs until the server is available.');
+    }
+}
+
+function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    })[char]);
+}
+
+function searchJobs() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+
+    document.querySelectorAll('.job-card').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(query)
+            ? ''
+            : 'none';
+    });
+}
+
+document.getElementById('searchInput').addEventListener('input', searchJobs);
+
+loadJobs();
+</script>
+
+</body>
+</html>

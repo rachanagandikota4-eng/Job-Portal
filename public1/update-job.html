@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Job | Rachana Job Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Job<span>Portal</span></div>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+         <li><a href="about.html">About</a></li>
+        <li><a href="jobs.html">Jobs</a></li>
+        <li><a href="add-job.html">Add Job</a></li>
+        <li><a href="update-job.html">Update</a></li>
+        <li><a href="delete-job.html">Delete</a></li>
+        
+    </ul>
+</nav>
+
+<header class="page-header">
+    <h1>Update <span>Job Details</span></h1>
+    <p>Keep job information accurate and up to date.</p>
+</header>
+
+<section class="section">
+
+    <div class="form-container">
+        <h2>Edit <span>Job Information</span></h2>
+
+        <form id="updateJobForm">
+
+            <div class="form-group">
+                <label for="job_id">Job ID to Update</label>
+                <input type="number" id="job_id" required>
+            </div>
+
+            <button type="button" id="loadJob">Load Job Details</button>
+
+            <div class="form-group" style="margin-top:20px;">
+                <label for="title">Job Title</label>
+                <input type="text" id="title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="company">Company</label>
+                <input type="text" id="company" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="salary">Annual Salary (₹)</label>
+                <input type="number" id="salary" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skill">Required Skill</label>
+                <select id="skill" required>
+                    <option value="Java">Java</option>
+                    <option value="Python">Python</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="interview_date">Interview Date</label>
+                <input type="date" id="interview_date" required>
+            </div>
+
+            <button type="submit">Save Changes</button>
+        </form>
+
+        <p id="message" role="status" style="margin-top:20px;text-align:center;"></p>
+    </div>
+
+    <div class="image-grid">
+        <div class="image-card">
+            <img src="6.jpg" alt="Office">
+            <div class="image-card-content"><h3>Professional Workspace</h3></div>
+        </div>
+        <div class="image-card">
+            <img src="1.jpg" alt="Team">
+            <div class="image-card-content"><h3>Teamwork</h3></div>
+        </div>
+        <div class="image-card">
+            <img src="7.jpg" alt="Meeting">
+            <div class="image-card-content"><h3>Better Opportunities</h3></div>
+        </div>
+        <div class="image-card">
+            <img src="8.jpg" alt="Desk">
+            <div class="image-card-content"><h3>Career Planning</h3></div>
+        </div>
+    </div>
+
+</section>
+
+<footer>
+    <p>Designed & Developed by <span class="rachana">Rachana</span></p>
+    <p>Online Job Portal © 2026</p>
+</footer>
+
+<script>
+const form = document.getElementById('updateJobForm');
+const message = document.getElementById('message');
+
+document.getElementById('loadJob').addEventListener('click', async function() {
+    const id = document.getElementById('job_id').value;
+
+    if (!id) {
+        message.textContent = 'Please enter a Job ID.';
+        message.style.color = '#b42318';
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/jobs/' + encodeURIComponent(id));
+        const job = await response.json();
+
+        if (!response.ok) {
+            throw new Error(job.message || job.error || 'Job not found.');
+        }
+
+        for (const field of ['title', 'company', 'location', 'salary', 'skill', 'interview_date']) {
+            document.getElementById(field).value = job[field] ?? '';
+        }
+
+        message.textContent = 'Job details loaded successfully.';
+        message.style.color = '#287a43';
+
+    } catch (error) {
+        message.textContent = error.message || 'Unable to load job.';
+        message.style.color = '#b42318';
+    }
+});
+
+form.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById('job_id').value;
+
+    const job = {
+        title: document.getElementById('title').value.trim(),
+        company: document.getElementById('company').value.trim(),
+        location: document.getElementById('location').value.trim(),
+        salary: Number(document.getElementById('salary').value),
+        skill: document.getElementById('skill').value,
+        interview_date: document.getElementById('interview_date').value
+    };
+
+    try {
+        const response = await fetch('/api/jobs/' + encodeURIComponent(id), {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(job)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || result.error || 'Unable to update job.');
+        }
+
+        message.textContent = 'Job updated successfully!';
+        message.style.color = '#287a43';
+
+    } catch (error) {
+        message.textContent = error.message || 'Server connection failed.';
+        message.style.color = '#b42318';
+    }
+});
+</script>
+
+</body>
+</html>
